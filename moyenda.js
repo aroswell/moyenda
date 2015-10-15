@@ -1,10 +1,9 @@
 $(document).on('ready page:load', function(){
 
   // var slides = $(".phoenix .slide");
-  var slideObject = {
-    slides: slides
-  };
-
+  // var slideObject = {
+  //   slides: slides
+  // };
   // slides.slideshow();
 
 });
@@ -109,7 +108,8 @@ function moveSlide(activeSlide, slide) {
   slide.addClass("active");
 }
 
-function background_slideShow() {
+function background_slideShow(imagePath) {
+  $('body').css('background-image', "url(" + imagePath + ")");
 
 }
 
