@@ -6,6 +6,8 @@ $(document).on('ready page:load', function(){
   // };
   // slides.slideshow();
 
+  Moyenda.advance(slideImages, false);
+
 });
 
 var interval;
@@ -19,100 +21,135 @@ var slideImages = [
   "images/tropical-beach-wallpaper-1280x768-144.jpg"
 ];
 
-( function ($) {
+var Moyenda = ( function () {
 
-  $.fn.slideshow = function(slideOptions, action) {
+  var _changeBackgroundImage = function (imagePath) {
+    console.log("url(" + imagePath + ")");
+    $('body').css('background-image', "url(" + imagePath + ")");
+  };
 
-    var slides = this;
+  return {
+      advance:  function (slides, wrap) {
+                  var lastIndex = slides.length - 1;
+                  var currentImage = $('body').css('background-image');
 
-    if (typeof slideOptions !== 'object') {
-      action = slideOptions;
-      slideOptions = {};
-    }
+                  if (currentIndex == 'none') {
+                    currentIndex = 0;
+                  } else {
+                    var currentIndex = slides.indexOf(currentImage);
+                  }
+
+                  if (currentIndex == lastIndex) {
+                    // if wrap is false the slider will not start over
+                    if (wrap == true) {
+                      var firstImage = $(slides[0]);
+                      _changeBackgroundImage(active, firstImage);
+
+                    } else {
+                      clearInterval(interval);
+
+                    }
+
+                  } else {
+                    var nextSlide = slides[currentIndex + 1];
+                    _changeBackgroundImage(nextSlide);
+                  }
+                }
+  };
+
+}) ();
 
 
-    var command = action || "";
-    var defaults = {
-      auto: true,
-      wrap: false,
-      timeInterval: 3000,
-      slideLoadingTime: 2000
-    };
+// ( function ($) {
 
-    slideOptions = $.extend({}, defaults, slideOptions);
-    // console.log(slideOptions);
+//   $.fn.slideshow = function(slideOptions, action) {
 
-    if (command == 'back') {
-      console.log("back back friend");
+//     var slides = this;
 
-    } else if (command == 'forward') {
-      console.log("forward ever backward never!");
+//     if (typeof slideOptions !== 'object') {
+//       action = slideOptions;
+//       slideOptions = {};
+//     }
 
-    } else if (command == 'pause') {
-      console.log("PAUSE!");
 
-    } else if (command == 'cycle') {
-      console.log("cycle through ...");
+//     var command = action || "";
+//     var defaults = {
+//       auto: true,
+//       wrap: false,
+//       timeInterval: 3000,
+//       slideLoadingTime: 2000
+//     };
 
-    } else if (typeof command == 'number') {
-      console.log("A number was passed");
-      //check if the number enter was an integer.
-      // if not an integer throw exception
+//     slideOptions = $.extend({}, defaults, slideOptions);
+//     // console.log(slideOptions);
 
-    } else {
-      setTimeout(function () {
-        slides.filter(".active").toggle();
-        if (slideOptions.auto == true) {
-          interval = setInterval(advance, slideOptions.timeInterval, slides, slideOptions.wrap);
-        }
-      }, slideOptions.slideLoadingTime);
+//     if (command == 'back') {
+//       console.log("back back friend");
 
-    }
+//     } else if (command == 'forward') {
+//       console.log("forward ever backward never!");
 
-  }
+//     } else if (command == 'pause') {
+//       console.log("PAUSE!");
 
-}(jQuery));
+//     } else if (command == 'cycle') {
+//       console.log("cycle through ...");
 
-function advance(slides, wrap) {
-  var lastIndex = slides.length - 1;
-  var active = slides.filter('.active');
-  var currentIndex = slides.index(active);
+//     } else if (typeof command == 'number') {
+//       console.log("A number was passed");
+//       //check if the number enter was an integer.
+//       // if not an integer throw exception
 
-  if (currentIndex == lastIndex) {
-    // if wrap is false the slider will not start over
-    if (wrap == true) {
-      var firstSlide = $(slides[0]);
-      moveSlide(active, firstSlide);
+//     } else {
+//       setTimeout(function () {
+//         slides.filter(".active").toggle();
+//         if (slideOptions.auto == true) {
+//           interval = setInterval(advance, slideOptions.timeInterval, slides, slideOptions.wrap);
+//         }
+//       }, slideOptions.slideLoadingTime);
 
-    } else {
-      clearInterval(interval);
-    }
+//     }
 
-  } else {
-    var nextSlide = $( slides[currentIndex + 1] );
-    moveSlide(active, nextSlide);
-  }
+//   }
 
-  // console.log("wrap is " + wrap);
-  // console.log(slides);
-  // console.log(active);
-  // console.log(currentIndex);
-  // console.log(nextSlide);
+// }(jQuery));
 
-}
+// function advance(slides, wrap) {
+//   var lastIndex = slides.length - 1;
+//   var active = slides.filter('.active');
+//   var currentIndex = slides.index(active);
 
-function moveSlide(activeSlide, slide) {
-  activeSlide.toggle();
-  slide.toggle();
-  activeSlide.removeClass("active");
-  slide.addClass("active");
-}
+//   if (currentIndex == lastIndex) {
+//     // if wrap is false the slider will not start over
+//     if (wrap == true) {
+//       var firstSlide = $(slides[0]);
+//       moveSlide(active, firstSlide);
 
-function background_slideShow(imagePath) {
-  $('body').css('background-image', "url(" + imagePath + ")");
+//     } else {
+//       clearInterval(interval);
+//     }
 
-}
+//   } else {
+//     var nextSlide = $( slides[currentIndex + 1] );
+//     moveSlide(active, nextSlide);
+//   }
 
+//   // console.log("wrap is " + wrap);
+//   // console.log(slides);
+//   // console.log(active);
+//   // console.log(currentIndex);
+//   // console.log(nextSlide);
+
+// }
+
+// function moveSlide(activeSlide, slide) {
+//   activeSlide.toggle();
+//   slide.toggle();
+//   activeSlide.removeClass("active");
+//   slide.addClass("active");
+// }
+
+// url("images/ferrari_dino_1280x768.jpg")
 
 
 
