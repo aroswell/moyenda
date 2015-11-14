@@ -1,12 +1,7 @@
 $(document).on('ready page:load', function(){
 
-  // var slides = $(".phoenix .slide");
-  // var slideObject = {
-  //   slides: slides
-  // };
-  // slides.slideshow();
-
-  Moyenda.advance(slideImages, false);
+  Moyenda.init();
+  Moyenda.run();
 
 });
 
@@ -20,137 +15,75 @@ var slideImages = [
   "images/ngc346_01_1280x768.jpg",
   "images/tropical-beach-wallpaper-1280x768-144.jpg"
 ];
+var currentIndex = -1;
 
+
+
+// MODULE
 var Moyenda = ( function () {
 
+  var slides = slideImages;
+
   var _changeBackgroundImage = function (imagePath) {
-    console.log("url(" + imagePath + ")");
+    // console.log("url(" + imagePath + ")");
     $('body').css('background-image', "url(" + imagePath + ")");
+    var Image = $('body').css('background-image');
+    console.log(Image);
+
+  };
+
+  var _advance = function (wrap) {
+    var lastIndex = slides.length - 1;
+    var firstImage = slides[0];
+    var fullImagePath = $('body').css('background-image');
+
+    console.log("Current image is " + fullImagePath);
+    console.log("Current index = " + currentIndex);
+
+    if (currentIndex == -1) {
+      _changeBackgroundImage(firstImage);
+      currentIndex += 1;
+
+    } else if (currentIndex == lastIndex) {
+      // if wrap is false the slider will not start over
+      if (wrap == true) {
+        _changeBackgroundImage(firstImage);
+        // resetting index
+        currentIndex = 0;
+
+      } else {
+        clearInterval(interval);
+        console.log("interval cleared.");
+
+      }
+
+    } else {
+      var nextSlide = slides[currentIndex + 1];
+      _changeBackgroundImage(nextSlide);
+      currentIndex += 1;
+
+    }
+
   };
 
   return {
-      advance:  function (slides, wrap) {
-                  var lastIndex = slides.length - 1;
-                  var currentImage = $('body').css('background-image');
+      init: function () {
+              $('#moyenda-slide').hide();
+            },
 
-                  if (currentIndex == 'none') {
-                    currentIndex = 0;
-                  } else {
-                    var currentIndex = slides.indexOf(currentImage);
-                  }
+      run:  function (wrap) {
+              var lastIndex = slides.length - 1;
+              var currentIndex = 0;
+              var wrapping = wrap;
 
-                  if (currentIndex == lastIndex) {
-                    // if wrap is false the slider will not start over
-                    if (wrap == true) {
-                      var firstImage = $(slides[0]);
-                      _changeBackgroundImage(active, firstImage);
+              setTimeout(function () {
+                interval = setInterval(_advance, 4000, slides, wrapping);
+              }, 1000);
+            },
 
-                    } else {
-                      clearInterval(interval);
-
-                    }
-
-                  } else {
-                    var nextSlide = slides[currentIndex + 1];
-                    _changeBackgroundImage(nextSlide);
-                  }
+      advance:  function (wrap) {
+                  _advance(slides, wrap)
                 }
   };
 
 }) ();
-
-
-// ( function ($) {
-
-//   $.fn.slideshow = function(slideOptions, action) {
-
-//     var slides = this;
-
-//     if (typeof slideOptions !== 'object') {
-//       action = slideOptions;
-//       slideOptions = {};
-//     }
-
-
-//     var command = action || "";
-//     var defaults = {
-//       auto: true,
-//       wrap: false,
-//       timeInterval: 3000,
-//       slideLoadingTime: 2000
-//     };
-
-//     slideOptions = $.extend({}, defaults, slideOptions);
-//     // console.log(slideOptions);
-
-//     if (command == 'back') {
-//       console.log("back back friend");
-
-//     } else if (command == 'forward') {
-//       console.log("forward ever backward never!");
-
-//     } else if (command == 'pause') {
-//       console.log("PAUSE!");
-
-//     } else if (command == 'cycle') {
-//       console.log("cycle through ...");
-
-//     } else if (typeof command == 'number') {
-//       console.log("A number was passed");
-//       //check if the number enter was an integer.
-//       // if not an integer throw exception
-
-//     } else {
-//       setTimeout(function () {
-//         slides.filter(".active").toggle();
-//         if (slideOptions.auto == true) {
-//           interval = setInterval(advance, slideOptions.timeInterval, slides, slideOptions.wrap);
-//         }
-//       }, slideOptions.slideLoadingTime);
-
-//     }
-
-//   }
-
-// }(jQuery));
-
-// function advance(slides, wrap) {
-//   var lastIndex = slides.length - 1;
-//   var active = slides.filter('.active');
-//   var currentIndex = slides.index(active);
-
-//   if (currentIndex == lastIndex) {
-//     // if wrap is false the slider will not start over
-//     if (wrap == true) {
-//       var firstSlide = $(slides[0]);
-//       moveSlide(active, firstSlide);
-
-//     } else {
-//       clearInterval(interval);
-//     }
-
-//   } else {
-//     var nextSlide = $( slides[currentIndex + 1] );
-//     moveSlide(active, nextSlide);
-//   }
-
-//   // console.log("wrap is " + wrap);
-//   // console.log(slides);
-//   // console.log(active);
-//   // console.log(currentIndex);
-//   // console.log(nextSlide);
-
-// }
-
-// function moveSlide(activeSlide, slide) {
-//   activeSlide.toggle();
-//   slide.toggle();
-//   activeSlide.removeClass("active");
-//   slide.addClass("active");
-// }
-
-// url("images/ferrari_dino_1280x768.jpg")
-
-
-
-
