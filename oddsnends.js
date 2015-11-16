@@ -95,12 +95,7 @@
 
 // }
 
-// function moveSlide(activeSlide, slide) {
-//   activeSlide.toggle();
-//   slide.toggle();
-//   activeSlide.removeClass("active");
-//   slide.addClass("active");
-// }
+
 
 // url("images/ferrari_dino_1280x768.jpg")
 

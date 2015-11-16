@@ -1,55 +1,48 @@
 $(document).on('ready page:load', function(){
+    slides = $('#moyenda-slide .slide');
 
-  Moyenda.init();
-  Moyenda.run();
+  // Moyenda.init();
+  setTimeout( function () {
+    Moyenda.run(true);
+  }, 1500);
 
 });
 
-var interval;
-var slideImages = [
-  "images/bmw-e90-z-performance.jpg",
-  "images/ferrari_dino_1280x768.jpg",
-  "images/iss_art01_1280x768.jpg",
-  "images/Mar-Saura-3-1280x768.jpg",
-  "images/shipwreck-beach-zakynthos-greece-wallpaper-1280x768-405.jpg",
-  "images/ngc346_01_1280x768.jpg",
-  "images/tropical-beach-wallpaper-1280x768-144.jpg"
-];
-var currentIndex = -1;
-
+var slides;
 
 
 // MODULE
 var Moyenda = ( function () {
 
-  var slides = slideImages;
+  var interval;
+  var currentIndex;
 
-  var _changeBackgroundImage = function (imagePath) {
-    // console.log("url(" + imagePath + ")");
-    $('body').css('background-image', "url(" + imagePath + ")");
-    var Image = $('body').css('background-image');
-    console.log(Image);
+  var _loadActiveSlide = function (activeSlide) {
+    $(activeSlide).fadeIn(5000);
+    // $(activeSlide).toggle();
+  };
+
+  var _moveSlide = function (activeSlide, slide) {
+    activeSlide.removeClass("active").fadeOut(5000);
+    slide.addClass("active").fadeIn(5000);
+
+    // activeSlide.removeClass("active");
+    // slide.addClass("active");
 
   };
 
-  var _advance = function (wrap) {
+  var _advance = function (slides, wrap) {
     var lastIndex = slides.length - 1;
-    var firstImage = slides[0];
-    var fullImagePath = $('body').css('background-image');
+    var firstSlide = slides[0];
+    var activeSlide = slides.filter('.active');
+    var currentIndex = slides.index(activeSlide);
 
-    console.log("Current image is " + fullImagePath);
-    console.log("Current index = " + currentIndex);
+    console.log("Current index is " + currentIndex);
 
-    if (currentIndex == -1) {
-      _changeBackgroundImage(firstImage);
-      currentIndex += 1;
-
-    } else if (currentIndex == lastIndex) {
+    if (currentIndex == lastIndex) {
       // if wrap is false the slider will not start over
       if (wrap == true) {
-        _changeBackgroundImage(firstImage);
-        // resetting index
-        currentIndex = 0;
+        _moveSlide( $(activeSlide), $(firstSlide) );
 
       } else {
         clearInterval(interval);
@@ -59,31 +52,37 @@ var Moyenda = ( function () {
 
     } else {
       var nextSlide = slides[currentIndex + 1];
-      _changeBackgroundImage(nextSlide);
-      currentIndex += 1;
+      _moveSlide( $(activeSlide), $(nextSlide) );
 
     }
 
   };
 
   return {
-      init: function () {
-              $('#moyenda-slide').hide();
-            },
-
       run:  function (wrap) {
-              var lastIndex = slides.length - 1;
-              var currentIndex = 0;
               var wrapping = wrap;
+              var activeSlide = slides.filter('.active');
+
+              _loadActiveSlide( $(activeSlide) );
 
               setTimeout(function () {
-                interval = setInterval(_advance, 4000, slides, wrapping);
-              }, 1000);
+                interval = setInterval(_advance, 7000, slides, wrapping);
+              }, 3000);
             },
 
-      advance:  function (wrap) {
-                  _advance(slides, wrap)
-                }
+      // advance:  function (wrap) {
+      //             _advance(slides, wrap)
+      //           }
+
   };
 
 }) ();
+
+
+document.oncontextmenu = function(e) {
+    e = e || window.event;
+    if (/^img$/i.test((e.target || e.srcElement).nodeName)) return false;
+};
+
+
+
